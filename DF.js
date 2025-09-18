@@ -302,7 +302,7 @@ function update(i, j) {
     let socket;
 
   function iniciarWebSocket() {
-    const wsUrl = "ws://192.168.208.27:3000";
+    const wsUrl = "ws://192.168.207.28:3000";
     console.log("Intentando conectar a WebSocket en", wsUrl);
     socket = new WebSocket(wsUrl);
 
