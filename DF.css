@@ -1,0 +1,39 @@
+#PJInfo td {
+    width: 80px;
+    height: 30px;
+    background-color: #f5c3b6; 
+    border: 2px dotted #c59e94;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#Dungeon td {
+    width: 80px;
+    height: 80px;
+    background-color: #e0f7fa; 
+    border: 2px dotted #90caf9;
+    text-align: center;
+    vertical-align: middle;
+    cursor:pointer;
+    
+}
+
+
+#actionMenu td {
+    width: 80px;
+    height: 30px;
+    background-color: #f7eea4; 
+    border: 2px dotted #c2ba81;
+    text-align: center;
+    vertical-align: middle;
+    cursor:pointer;
+}
+
+#TextBox td {
+    width: 420px;
+    height: 120px;
+    background-color: #f3e5f5; 
+    border: 2px dotted #ce93d8;
+    text-align: center;
+    vertical-align: middle;
+}
