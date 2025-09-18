@@ -219,13 +219,13 @@ function renderDungeon() {
   for (let i = 0; i < dungeonObjects.length; i++) {
     for (let j = 0; j < dungeonObjects[i].length; j++) {
       let obj = dungeonObjects[i][j];
-      if (!obj) {
+    if (!obj) {
   dungeon.rows[i].cells[j].innerHTML = "";
 } else if (obj.type === "enemy") {
   dungeon.rows[i].cells[j].innerHTML = `Enemy<br>HP:${obj.hp}<br>ATK:${obj.ataque}`;
 } else if (obj.type === "chest") {
   dungeon.rows[i].cells[j].innerHTML = `${obj.chestType} Chest<br>Gold:${obj.gold}`;
-} if (obj.type === "shrine") {
+} else if (obj.type === "shrine") {
   dungeon.rows[i].cells[j].innerHTML = "Shrine";
 }
     }
