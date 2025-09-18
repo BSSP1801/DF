@@ -97,8 +97,8 @@ class Cofre {
     }
 }
 class Fuente {
-    constructor(type) {
-        this.type = type;
+    constructor() {
+        this.type = "shrine";
      
     }
 }
@@ -153,15 +153,16 @@ function locateChest(i, j, chest) {
 }
 
 function generateShrine(){
-    tipo="Shrine";
-    return new Fuente(tipo);
+   
+    return new Fuente();
 }
-function locateShrine(i, j) {
+function locateShrine(i, j,) {
     document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Shrine";
 }
 
 
 function generateDungeon() {
+
     let dungeon = document.getElementById("Dungeon");
     dungeonObjects = []; // Reinicia el arreglo
 
@@ -169,16 +170,17 @@ function generateDungeon() {
         dungeonObjects[i] = [];
         for (let j = 0; j < dungeon.rows[i].cells.length; j++) {
             let obj;
-            if (Math.random() < 0.2) {
+            let rand = Math.random();
+            if (rand < 0.2) {
                 obj = generateChest();
                 locateChest(i, j, obj);
-            } else if (Math.random() < 0.7) {
+            } else if (rand < 0.7) {
                 obj = generateEnemy();
                 locateEnemy(i, j, obj);
             }else{
 
                 obj = generateShrine();
-                locateShrine(i, j, obj);
+                locateShrine(i, j);
             }
 
             dungeonObjects[i][j] = obj;
@@ -206,11 +208,11 @@ function getDungeonJSON() {
 }
 
 // Recibir dungeonJSON y actualizar localmente
-function updateDungeonFromJSON(json) {
+/*function updateDungeonFromJSON(json) {
   dungeonObjects = JSON.parse(json);
   // Re-renderiza la tabla con el nuevo estado
   renderDungeon();
-}
+}*/
 
 function renderDungeon() {
   const dungeon = document.getElementById("Dungeon");
@@ -223,18 +225,23 @@ function renderDungeon() {
   dungeon.rows[i].cells[j].innerHTML = `Enemy<br>HP:${obj.hp}<br>ATK:${obj.ataque}`;
 } else if (obj.type === "chest") {
   dungeon.rows[i].cells[j].innerHTML = `${obj.chestType} Chest<br>Gold:${obj.gold}`;
+} if (obj.type === "shrine") {
+  dungeon.rows[i].cells[j].innerHTML = "Shrine";
 }
     }
   }
 }
 
-
+// Actualizar una celda específica despues de una accion
 function update(i, j) {
     let obj = dungeonObjects[i][j]; 
     if (obj instanceof Enemigo) {
         document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Enemy<br>HP:" + obj.hp + "<br>ATK:" + obj.ataque;
     } else if (obj instanceof Cofre) {
         document.getElementById("Dungeon").rows[i].cells[j].innerHTML = obj.type + " Chest<br>Gold:" + obj.gold;
+    } else if(obj instanceof Fuente){
+        document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Shrine";
+
     }
 
 }
@@ -318,10 +325,11 @@ function update(i, j) {
           abrirCofre(data.fila, data.columna);
           break;
           case "updateDungeon":
-       updateDungeonFromJSON(data.dungeon);
+            
+       updateDungeonFromJSON(JSON.parse(data.dungeon));
   break;
-   case 'usar_Fuente':
-          abrirCofre(data.fila, data.columna);
+   case 'usar_fuente':
+          usarFuente(data.fila, data.columna);
           break;
         default:
           console.log("Mensaje desconocido:", data);
@@ -378,10 +386,12 @@ socket.send(JSON.stringify(updateMsg));
   }
 }
 function updateDungeonFromJSON(rawDungeon) {
+
   dungeonObjects = rawDungeon.map(row => row.map(obj => {
     if (!obj) return null;
     if (obj.type === "enemy") return new Enemigo(obj.hp, obj.ataque);
     if (obj.type === "chest") return new Cofre(obj.chestType, obj.gold);
+    if (obj.type === "shrine") return new Fuente();
     return null;
   }));
   renderDungeon();
@@ -440,10 +450,22 @@ function enviarAbrirCofre(fila, columna) {
   }
 }
 
+function usarFuente(fila,columna){
+enviarUsarFuente(fila, columna);
+
+  const updateMsg = {
+  tipo: "updateDungeon",
+  dungeon: dungeonObjects
+};
+socket.send(JSON.stringify(updateMsg));
+
+  
+}
+
 function enviarUsarFuente(fila, columna) {
   if (socket && socket.readyState === WebSocket.OPEN) {
     let msg = {
-      tipo: "usar_Fuente",
+      tipo: "usar_fuente",
       fila: fila,
       columna: columna
     };
