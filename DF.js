@@ -1,81 +1,77 @@
 
 
-startButton=document.createElement("button");
-startButton.innerHTML="Iniciar";
+startButton = document.createElement("button");
+startButton.innerHTML = "Iniciar";
 document.body.appendChild(startButton);
 
 
-sincButton=document.createElement("button");
-sincButton.innerHTML="Sincronizar";
+sincButton = document.createElement("button");
+sincButton.innerHTML = "Sincronizar";
 document.body.appendChild(sincButton);
-sincButton.disabled=true;
-function createDungeon(){
-let Dungeon = document.getElementById("Dungeon");
-    Dungeon.innerHTML=""; // Limpiar contenido previo
-for (let i = 0; i < 5; i++) {
+sincButton.disabled = true;
+function createDungeon() {
+  let Dungeon = document.getElementById("Dungeon");
+  Dungeon.innerHTML = ""; // Limpiar contenido previo
+  for (let i = 0; i < 5; i++) {
     genRow = Dungeon.insertRow();
-            for(let j=0;j<5;j++){
-                let genCell = genRow.insertCell  ();
+    for (let j = 0; j < 5; j++) {
+      let genCell = genRow.insertCell();
 
-            }
-        }
+    }
+  }
 
 }
 
-sincButton.onclick=function(){
-const updateMsg = {
-  tipo: "updateDungeon",
-  dungeon: dungeonObjects
-};
-socket.send(JSON.stringify(updateMsg));
+sincButton.onclick = function () {
+  const updateMsg = {
+    tipo: "updateDungeon",
+    dungeon: dungeonObjects
+  };
+  socket.send(JSON.stringify(updateMsg));
 }
 
 
 
-startButton.onclick=function(){
+startButton.onclick = function () {
   createDungeon();
-generateDungeon();
-const updateMsg = {
-  tipo: "updateDungeon",
-  dungeon: dungeonObjects
-};
-socket.send(JSON.stringify(updateMsg));
+  generateDungeon();
+
 };
 
 function endGame() {
-    // Deshabilitar todas las celdas del dungeon
-  document.getElementById("startButton").disabled = true;
-  document.getElementById("sincButton").disabled = true;
-    document.getElementById("actionMenu").innerHTML = "";
-    document.getElementById("PJInfo").innerHTML = "";
-    document.getElementById("TextBox").innerHTML = "";
-    document.getElementById("Dungeon").innerHTML = "";
-    alert("Nigga you dead");
+  // Deshabilitar todas las celdas del dungeon
+  
+  
+  document.getElementById("actionMenu").innerHTML = "";
+  document.getElementById("PJInfo").innerHTML = "";
+  document.getElementById("TextBox").innerHTML = "";
+  document.getElementById("Dungeon").innerHTML = "";
+  alert("Nigga you dead");
 }
 
-function startGame(){
-     let pjInfo = document.getElementById("PJInfo");
-        let genRow = pjInfo.insertRow();
-    for (let i = 0; i < 5; i++) {
-            let genCell = genRow.insertCell();
-        }
-        
-HP=100;
-Mana=100;
-Gold=0;
-document.getElementById("PJInfo").rows[0].cells[0].innerHTML="HP:"+HP;
-document.getElementById("PJInfo").rows[0].cells[1].innerHTML="Mana:"+Mana;
-document.getElementById("PJInfo").rows[0].cells[2].innerHTML="Gold:"+Gold;
+function startGame() {
+  let pjInfo = document.getElementById("PJInfo");
+  let genRow = pjInfo.insertRow();
+  for (let i = 0; i < 5; i++) {
+    let genCell = genRow.insertCell();
+  }
+
+  HP = 100;
+  Mana = 100;
+  Gold = 0;
+  document.getElementById("PJInfo").rows[0].cells[0].innerHTML = "HP:" + HP;
+  document.getElementById("PJInfo").rows[0].cells[1].innerHTML = "Mana:" + Mana;
+  document.getElementById("PJInfo").rows[0].cells[2].innerHTML = "Gold:" + Gold;
 
 
 
-        
 
-let textBox = document.getElementById("TextBox");
-       genRow = textBox.insertRow();
-    
-            let genCell = genRow.insertCell();
-        
+
+  let textBox = document.getElementById("TextBox");
+  genRow = textBox.insertRow();
+
+  let genCell = genRow.insertCell();
+
 
 
 
@@ -83,123 +79,135 @@ let textBox = document.getElementById("TextBox");
 startGame();
 
 class Enemigo {
-    constructor(hp, ataque) {
-        this.type = "enemy";
-        this.hp = hp;
-        this.ataque = ataque;
-    }
+  constructor(hp, ataque) {
+    this.type = "enemy";
+    this.hp = hp;
+    this.ataque = ataque;
+  }
 }
 class Cofre {
-    constructor(type, gold) {
-        this.type = "chest";
-        this.gold = gold;
-        this.chestType = type; // para diferenciar small o large, opcional
-    }
+  constructor(type, gold) {
+    this.type = "chest";
+    this.gold = gold;
+    this.chestType = type; // para diferenciar small o large, opcional
+  }
 }
 class Fuente {
-    constructor() {
-        this.type = "shrine";
-     
-    }
+  constructor() {
+    this.type = "shrine";
+
+  }
 }
 
 textBox = document.getElementById("TextBox").rows[0].cells[0];
-textBox.innerHTML="Welcome to the Dungeon!";
+textBox.innerHTML = "Welcome to the Dungeon!";
 
 
-function updateText(newText){
-    textBox.innerHTML=newText;
+function updateText(newText) {
+  textBox.innerHTML = newText;
 }
 
-function changeHP(amount){
-    HP+=amount;
-    if(HP<0) HP=0;
-    document.getElementById("PJInfo").rows[0].cells[0].innerHTML="HP:"+HP;
-    if (HP<=0) {
-        updateText("You have been defeated! Game Over.");
-       endGame();
-    
-    }
+function changeHP(amount) {
+  maxHP=100;
+  HP += amount;
+
+  if (HP > maxHP) HP = maxHP;
+  if (HP < 0) HP = 0;
+  document.getElementById("PJInfo").rows[0].cells[0].innerHTML = "HP:" + HP;
+  if (HP <= 0) {
+    updateText("You have been defeated! Game Over.");
+    endGame();
+
+  }
 }
 
-function changeMana(amount){
-    Mana+=amount;
-    if(Mana<0) Mana=0;
-    document.getElementById("PJInfo").rows[0].cells[1].innerHTML="Mana:"+Mana;
+function changeMana(amount) {
+  maxMana=100;
+  Mana += amount;
+  if (Mana > maxMana) Mana = maxMana;
+  if (Mana < 0) Mana = 0;
+  document.getElementById("PJInfo").rows[0].cells[1].innerHTML = "Mana:" + Mana;
 
 }
-function changeGold(amount){
-    Gold+=amount;
-    if(Gold<0) Gold=0;
-    document.getElementById("PJInfo").rows[0].cells[2].innerHTML="Gold:"+Gold;
+function changeGold(amount) {
+  Gold += amount;
+  if (Gold < 0) Gold = 0;
+  document.getElementById("PJInfo").rows[0].cells[2].innerHTML = "Gold:" + Gold;
 }
 
 
-function generateEnemy(){
-    let enemyHP = Math.floor(Math.random() * 100) + 51; 
-    let enemyAttack = Math.floor(Math.random() * 20) + 6; 
-    return new Enemigo(enemyHP, enemyAttack);
+function generateEnemy() {
+  let enemyHP = Math.floor(Math.random() * 100) + 51;
+  let enemyAttack = Math.floor(Math.random() * 20) + 6;
+  return new Enemigo(enemyHP, enemyAttack);
 }
 function locateEnemy(i, j, enemy) {
-    document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Enemy<br>HP:" + enemy.hp + "<br>ATK:" + enemy.ataque;
+  document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Enemy<br>HP:" + enemy.hp + "<br>ATK:" + enemy.ataque;
 }
-function generateChest(){
-    let chestType = Math.random() < 0.7 ? "Small" : "Large"; 
-    let chestGold = chestType === "Small" ? Math.floor(Math.random() * 20) : Math.floor(Math.random() * 100) ;
-    return new Cofre(chestType, chestGold);
+function generateChest() {
+  let chestType = Math.random() < 0.7 ? "Small" : "Large";
+  let chestGold = chestType === "Small" ? Math.floor(Math.random() * 20) : Math.floor(Math.random() * 100);
+  return new Cofre(chestType, chestGold);
 }
 function locateChest(i, j, chest) {
-    document.getElementById("Dungeon").rows[i].cells[j].innerHTML = chest.type + " Chest<br>Gold:" + chest.gold;
+  document.getElementById("Dungeon").rows[i].cells[j].innerHTML = chest.type + " Chest<br>Gold:" + chest.gold;
 }
 
-function generateShrine(){
-   
-    return new Fuente();
+function generateShrine() {
+
+  return new Fuente();
 }
 function locateShrine(i, j,) {
-    document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Shrine";
+  document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Shrine";
 }
 
 
 function generateDungeon() {
 
-    let dungeon = document.getElementById("Dungeon");
-    dungeonObjects = []; // Reinicia el arreglo
+  let dungeon = document.getElementById("Dungeon");
+  dungeonObjects = []; // Reinicia el arreglo
 
-    for (let i = 0; i < dungeon.rows.length; i++) {
-        dungeonObjects[i] = [];
-        for (let j = 0; j < dungeon.rows[i].cells.length; j++) {
-            let obj;
-            let rand = Math.random();
-            if (rand < 0.2) {
-                obj = generateChest();
-                locateChest(i, j, obj);
-            } else if (rand < 0.7) {
-                obj = generateEnemy();
-                locateEnemy(i, j, obj);
-            }else{
+  for (let i = 0; i < dungeon.rows.length; i++) {
+    dungeonObjects[i] = [];
+    for (let j = 0; j < dungeon.rows[i].cells.length; j++) {
+      let obj;
+      let rand = Math.random();
+      if (rand < 0.2) {
+        obj = generateChest();
+        locateChest(i, j, obj);
+      } else if (rand < 0.7) {
+        obj = generateEnemy();
+        locateEnemy(i, j, obj);
+      } else {
 
-                obj = generateShrine();
-                locateShrine(i, j);
-            }
+        obj = generateShrine();
+        locateShrine(i, j);
+      }
 
-            dungeonObjects[i][j] = obj;
+      dungeonObjects[i][j] = obj;
 
-           dungeon.rows[i].cells[j].onclick = function() {
-                for (let x = 0; x < dungeon.rows.length; x++) {
-                    for (let y = 0; y < dungeon.rows[x].cells.length; y++) {
-                        dungeon.rows[x].cells[y].style.backgroundColor = "#e0f7fa";
-                    }
-                }
-
-                
-                clearActions();
-                generateActions(i, j);
-                updateText(`¡Has hecho clic en la celda [${i}][${j}]!`);
-                this.style.backgroundColor = "#ffd700";
-            };
+      dungeon.rows[i].cells[j].onclick = function () {
+        for (let x = 0; x < dungeon.rows.length; x++) {
+          for (let y = 0; y < dungeon.rows[x].cells.length; y++) {
+            dungeon.rows[x].cells[y].style.backgroundColor = "#e0f7fa";
+          }
         }
+
+
+        clearActions();
+        generateActions(i, j);
+        updateText(`¡Has hecho clic en la celda [${i}][${j}]!`);
+        this.style.backgroundColor = "#ffd700";
+
+        const updateMsg = {
+          tipo: "updateDungeon",
+          dungeon: dungeonObjects
+        };
+        socket.send(JSON.stringify(updateMsg));
+
+      };
     }
+  }
 }
 
 // Convertir dungeonObjects a JSON para enviar
@@ -208,52 +216,59 @@ function getDungeonJSON() {
 }
 
 // Recibir dungeonJSON y actualizar localmente
-/*function updateDungeonFromJSON(json) {
+function updateDungeonFromJSON(json) {
   dungeonObjects = JSON.parse(json);
   // Re-renderiza la tabla con el nuevo estado
   renderDungeon();
-}*/
+}
 
 function renderDungeon() {
   const dungeon = document.getElementById("Dungeon");
   for (let i = 0; i < dungeonObjects.length; i++) {
     for (let j = 0; j < dungeonObjects[i].length; j++) {
       let obj = dungeonObjects[i][j];
-    if (!obj) {
-  dungeon.rows[i].cells[j].innerHTML = "";
-} else if (obj.type === "enemy") {
-  dungeon.rows[i].cells[j].innerHTML = `Enemy<br>HP:${obj.hp}<br>ATK:${obj.ataque}`;
-} else if (obj.type === "chest") {
-  dungeon.rows[i].cells[j].innerHTML = `${obj.chestType} Chest<br>Gold:${obj.gold}`;
-} else if (obj.type === "shrine") {
-  dungeon.rows[i].cells[j].innerHTML = "Shrine";
-}
+      if (!obj) {
+        dungeon.rows[i].cells[j].innerHTML = "";
+      } else if (obj.type === "enemy") {
+        dungeon.rows[i].cells[j].innerHTML = `Enemy<br>HP:${obj.hp}<br>ATK:${obj.ataque}`;
+      } else if (obj.type === "chest") {
+        dungeon.rows[i].cells[j].innerHTML = `${obj.chestType} Chest<br>Gold:${obj.gold}`;
+      } else if (obj.type === "shrine") {
+        dungeon.rows[i].cells[j].innerHTML = "Shrine";
+      }
     }
   }
 }
 
 // Actualizar una celda específica despues de una accion
 function update(i, j) {
-    let obj = dungeonObjects[i][j]; 
-    if (obj instanceof Enemigo) {
-        document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Enemy<br>HP:" + obj.hp + "<br>ATK:" + obj.ataque;
-    } else if (obj instanceof Cofre) {
-        document.getElementById("Dungeon").rows[i].cells[j].innerHTML = obj.type + " Chest<br>Gold:" + obj.gold;
-    } else if(obj instanceof Fuente){
-        document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Shrine";
+  const dungeon = document.getElementById("Dungeon");
+  const row = dungeon.rows[i];
+  if (!row || !row.cells[j]) {
+    console.error(`Celda no encontrada en [${i}][${j}]`);
+    return;  // Salir si la celda no existe
+  }
 
-    }
+  let obj = dungeonObjects[i][j];
+  if (obj instanceof Enemigo) {
+    document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Enemy<br>HP:" + obj.hp + "<br>ATK:" + obj.ataque;
+  } else if (obj instanceof Cofre) {
+    document.getElementById("Dungeon").rows[i].cells[j].innerHTML = obj.type + " Chest<br>Gold:" + obj.gold;
+  } else if (obj instanceof Fuente) {
+    document.getElementById("Dungeon").rows[i].cells[j].innerHTML = "Shrine";
+
+  }
 
 }
 
-    function clearActions(){
-        let menu= document.getElementById("actionMenu");
-        menu.innerHTML="";
-    }
-    function generateActions(n, m) {
+function clearActions() {
+  let menu = document.getElementById("actionMenu");
+  menu.innerHTML = "";
+}
+function generateActions(n, m) {
   let menu = document.getElementById("actionMenu");
   let genRow = menu.insertRow();
-  let obj = dungeonObjects[n][m]; 
+  let obj = dungeonObjects[n][m];
 
   for (let i = 0; i < 4; i++) {
     let genCell = genRow.insertCell();
@@ -270,13 +285,14 @@ function update(i, j) {
       if (Mana < 5) {
         updateText("Not enough Mana to attack!");
         return;
-      }else{
+      } else {
+         changeMana(-5);
         enviarAtaque(n, m, 10);
         //enviarDano();
         changeHP(-obj.ataque);
-        changeMana(-5);
+       
       }
-      
+
     };
   }
 
@@ -286,49 +302,49 @@ function update(i, j) {
       changeMana(100);
       changeHP(100);
       updateText("You were blessed!");
-     
-  enviarUsarFuente(n, m);
+
+      enviarUsarFuente(n, m);
 
 
 
     }
-  
+
   }
 }
 
 
 
 
-    let socket;
+let socket;
 
-  function iniciarWebSocket() {
-    const wsUrl = "ws://192.168.207.28:3000";
-    console.log("Intentando conectar a WebSocket en", wsUrl);
-    socket = new WebSocket(wsUrl);
+function iniciarWebSocket() {
+  const wsUrl = "ws://192.168.208.27:3000";
+  console.log("Intentando conectar a WebSocket en", wsUrl);
+  socket = new WebSocket(wsUrl);
 
-    socket.onopen = () => {
-      console.log("WebSocket conectado");
-    };
+  socket.onopen = () => {
+    console.log("WebSocket conectado");
+  };
 
-    socket.onmessage = (event) => {
-      document.getElementById("chat").value += event.data + "\n";
+  socket.onmessage = (event) => {
+    document.getElementById("chat").value += event.data + "\n";
 
 
-       try {
+    try {
       let data = JSON.parse(event.data);
 
-      switch(data.tipo) {
+      switch (data.tipo) {
         case 'ataque':
           aplicarAtaque(data.fila, data.columna, data.dano);
           break;
         case 'abrir_cofre':
           abrirCofre(data.fila, data.columna);
           break;
-          case "updateDungeon":
-            
-       updateDungeonFromJSON(JSON.parse(data.dungeon));
-  break;
-   case 'usar_fuente':
+        case "updateDungeon":
+
+          updateDungeonFromJSON(data.dungeon);
+          break;
+        case 'usar_fuente':
           usarFuente(data.fila, data.columna);
           break;
         default:
@@ -337,27 +353,27 @@ function update(i, j) {
     } catch (e) {
       console.error("Error al procesar mensaje WebSocket:", e);
     }
-    };
+  };
 
-    socket.onclose = () => {
-      console.log("WebSocket cerrado");
-    };
+  socket.onclose = () => {
+    console.log("WebSocket cerrado");
+  };
 
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
 }
 
 
-  function send() {
-    const msg = document.getElementById("msg").value;
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(msg);
-      document.getElementById("msg").value = "";
-    } else {
-      alert("WebSocket no está conectado.");
-    }
+function send() {
+  const msg = document.getElementById("msg").value;
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(msg);
+    document.getElementById("msg").value = "";
+  } else {
+    alert("WebSocket no está conectado.");
   }
+}
 function aplicarAtaque(fila, columna, dano) {
   let obj = dungeonObjects[fila][columna];
   if (obj instanceof Enemigo && obj.hp > 0) {
@@ -369,18 +385,18 @@ function aplicarAtaque(fila, columna, dano) {
       clearActions();
       updateText("Enemy defeated!");
       // Aquí podrías dar recompensa si quieres
-    } else {
+    } else if(obj.hp > 0) {
       updateText(`Enemy hit! HP restante: ${obj.hp}`);
       update(fila, columna);
-      
+
     }
     //actualizar dungeon via WebSocket
-const updateMsg = {
-  tipo: "updateDungeon",
-  dungeon: dungeonObjects, // se serializa automáticamente en JSON al enviarlo
-};
+    const updateMsg = {
+      tipo: "updateDungeon",
+      dungeon: dungeonObjects, // se serializa automáticamente en JSON al enviarlo
+    };
 
-socket.send(JSON.stringify(updateMsg));
+    socket.send(JSON.stringify(updateMsg));
 
 
   }
@@ -431,10 +447,10 @@ function abrirCofre(fila, columna) {
     update(fila, columna);
     clearActions();
     const updateMsg = {
-  tipo: "updateDungeon",
-  dungeon: dungeonObjects
-};
-socket.send(JSON.stringify(updateMsg));
+      tipo: "updateDungeon",
+      dungeon: dungeonObjects
+    };
+    socket.send(JSON.stringify(updateMsg));
   }
 }
 
@@ -450,16 +466,21 @@ function enviarAbrirCofre(fila, columna) {
   }
 }
 
-function usarFuente(fila,columna){
-enviarUsarFuente(fila, columna);
-
-  const updateMsg = {
-  tipo: "updateDungeon",
-  dungeon: dungeonObjects
-};
-socket.send(JSON.stringify(updateMsg));
-
+function usarFuente(fila, columna) {
+document.getElementById("Dungeon").rows[fila].cells[columna].innerHTML = "Broken Shrine";
+  dungeonObjects[fila][columna] = null;
   
+
+    clearActions();
+ /* enviarUsarFuente(fila, columna);
+*/
+  const updateMsg = {
+    tipo: "updateDungeon",
+    dungeon: dungeonObjects
+  };
+  socket.send(JSON.stringify(updateMsg));
+
+
 }
 
 function enviarUsarFuente(fila, columna) {
@@ -474,5 +495,5 @@ function enviarUsarFuente(fila, columna) {
 }
 
 
-  
-  window.onload = iniciarWebSocket;
+
+window.onload = iniciarWebSocket;
